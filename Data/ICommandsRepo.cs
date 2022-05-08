@@ -4,6 +4,6 @@ namespace CommandsREST.Data;
 
     public interface ICommandsRepo
     {
-         IEnumerable <Command> GetAppCommands();
+         IEnumerable <Command> GetAllCommands();
          Command GetCommandById(int id);
     }

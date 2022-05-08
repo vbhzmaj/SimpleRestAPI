@@ -5,7 +5,7 @@ namespace CommandsREST.Data;
 
     public class MockCommandsRepo : ICommandsRepo
     {
-        public IEnumerable <Command> GetAppCommands()
+        public IEnumerable <Command> GetAllCommands()
         {
             var commands = new List<Command>
             {
