@@ -4,6 +4,8 @@ using CommandsREST.Models;
 using CommandsREST.Data;
 using AutoMapper;
 using CommandsREST.DTOs;
+using Newtonsoft.Json.Serialization;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace CommandsREST.Controllers;
 
@@ -54,4 +56,61 @@ public class CommandsController : ControllerBase
         //return Ok(commandReadDTO);
         return CreatedAtRoute(nameof(GetCommandById), new {Id=commandReadDTO.Id}, commandReadDTO);
         }
+
+    //PUT api/commands
+    [HttpPut("{id}")]
+    public ActionResult UpdateCommand(int id, CommandUpdateDTO commandUpdateDTO)
+    {
+        var commandModelFromRepo = _repository.GetCommandById(id);
+        if(commandModelFromRepo == null)
+        {
+            return NotFound();
+        }
+
+        _mapper.Map(commandUpdateDTO, commandModelFromRepo);
+
+        _repository.UpdateCommand(commandModelFromRepo);
+
+        _repository.SaveChanges();
+
+        return NoContent();
+    }
+
+    //PATCH api/commands/{id}
+    [HttpPatch("{id}")]
+    public ActionResult PartialCommandUpdate(int id, JsonPatchDocument<CommandUpdateDTO> patchDoc)
+    {
+        var commandModelFromRepo = _repository.GetCommandById(id);
+        if(commandModelFromRepo == null)
+        {
+            return NotFound();
+        }
+
+        var commandToPatch = _mapper.Map<CommandUpdateDTO>(commandModelFromRepo);
+        patchDoc.ApplyTo(commandToPatch, ModelState);
+        if(!TryValidateModel(commandToPatch))
+        {
+            return ValidationProblem(ModelState);
+        }
+
+        _mapper.Map(commandToPatch, commandModelFromRepo);
+        _repository.UpdateCommand(commandModelFromRepo);
+        _repository.SaveChanges();
+        return NoContent();
+    }
+
+    //DELETE api/commands/{id}
+    [HttpDelete("{id}")]
+    public ActionResult DeleteCommand(int id)
+    {
+        var commandModelFromRepo = _repository.GetCommandById(id);
+        if(commandModelFromRepo == null)
+        {
+            return NotFound();
+        }
+        _repository.DeleteCommand(commandModelFromRepo);
+        _repository.SaveChanges();
+
+        return NoContent();
+    }
 }

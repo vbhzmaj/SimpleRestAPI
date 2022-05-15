@@ -23,6 +23,21 @@ namespace CommandsREST.Data
             _context.Commands.Add(cmd);
         }
 
+        public void UpdateCommand(Command cmd)
+        {
+            //No action, AutoMapper will do all work
+        }
+
+        public void DeleteCommand(Command cmd)
+        {
+            if(cmd == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            _context.Commands.Remove(cmd);
+        }
+
         public IEnumerable <Command> GetAllCommands()
         {
            return _context.Commands.ToList();

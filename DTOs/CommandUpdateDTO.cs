@@ -1,10 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace CommandsREST.DTOs
 {
-    public class CommandCreateDTO
+    public class CommandUpdateDTO
     {
-
         [Required]
         [MaxLength(250)]
         public string? HowTo { get; set; }
